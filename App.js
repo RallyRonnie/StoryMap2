@@ -34,13 +34,13 @@ Ext.define('StoryMap', {
 		addNewConfig = {
 			xtype: 'rallyaddnew',
 			newButtonText: '+ New Feature/Story',
-			recordTypes: ['PortfolioItem/Feature', 'User Story'],
+			recordTypes: ['User Story', 'PortfolioItem/Feature'],
 			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
 			listeners: {
 				create: function(addNew, record) {
 //					Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
 // app.board.refresh();
-app.buildPage();
+app._buildPage();
 				}
 			},
 			showAddWithDetails: true
@@ -57,6 +57,7 @@ app.buildPage();
 			context: this.getContext(),
 			enableRanking: true,
 			cardConfig: {
+				fields: ['Name', 'PlanEstimate', 'ScheduleState'],
 				editable: true,
 				showIconsAndHighlightBorder: true,
 				showReadyIcon: true,
@@ -89,14 +90,13 @@ app.buildPage();
 		addNewReleaseConfig = {
 			xtype: 'rallyaddnew',
 			newButtonText: '+ New Release',
-//			fieldLabel: 'Add Release',
 			recordTypes: ['Release'],
 //			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
 			listeners: {
 				create: function(addNew, record) {
 //				Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
 // app.board.refresh();
-app.buildPage();
+app._buildPage();
 				}
 			},
 			showAddWithDetails: true

@@ -17,8 +17,7 @@ Ext.define('StoryMap', {
 		app._buildPage();
 	},
 // Build Page
-	_buildPage: function() {
-		app.releaseArray = [];	
+	_buildPage: function() {	
 		Ext.create('Rally.data.wsapi.Store', {
 			model : 'Release',
 			fetch : ['Name', 'ObjectID'],
@@ -44,13 +43,12 @@ Ext.define('StoryMap', {
 		addNewConfig = {
 			xtype: 'rallyaddnew',
 			newButtonText: '+ New Feature/Story',
-			recordTypes: ['PortfolioItem/Feature', 'User Story'],
-//			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
+			recordTypes: ['User Story', 'PortfolioItem/Feature'],
+			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
 			listeners: {
 				create: function(addNew, record) {
 //					Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
 // app.board.refresh();
-console.log("Created F/S");
 app._buildPage();
 				}
 			},
@@ -68,6 +66,7 @@ app._buildPage();
 			context: this.getContext(),
 			enableRanking: true,
 			cardConfig: {
+				fields: ['Name', 'PlanEstimate', 'ScheduleState'],
 				editable: true,
 				showIconsAndHighlightBorder: true,
 				showReadyIcon: true,
@@ -100,7 +99,6 @@ app._buildPage();
 		addNewReleaseConfig = {
 			xtype: 'rallyaddnew',
 			newButtonText: '+ New Release',
-//			fieldLabel: 'Add Release',
 			recordTypes: ['Release'],
 //			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
 			listeners: {
