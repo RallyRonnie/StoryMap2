@@ -44,7 +44,7 @@ Ext.define('StoryMap', {
 			xtype: 'rallyaddnew',
 			newButtonText: '+ New Feature/Story',
 			recordTypes: ['User Story', 'PortfolioItem/Feature'],
-			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
+			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project', 'Tasks', 'Dependencies'],
 			listeners: {
 				create: function(addNew, record) {
 //					Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
