@@ -39,8 +39,8 @@ Ext.define('StoryMap', {
 			listeners: {
 				create: function(addNew, record) {
 //					Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
-// app.board.refresh();
-app._buildPage();
+					// app.board.refresh();
+					app._buildPage();
 				}
 			},
 			showAddWithDetails: true
@@ -94,9 +94,9 @@ app._buildPage();
 //			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
 			listeners: {
 				create: function(addNew, record) {
-//				Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
-// app.board.refresh();
-app._buildPage();
+//					Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
+					// app.board.refresh();
+					app._buildPage();
 				}
 			},
 			showAddWithDetails: true
