@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StoryMap</title>
+
+    <script type="text/javascript" src="/apps/2.0/sdk.js"></script>
+
+    <script type="text/javascript">
+        Rally.onReady(function () {
+                var app;
+Ext.define('StoryMap', {
+	extend: 'Rally.app.App',
+	componentCls: 'app',
+	launch: function() {
+		app = this;
+		app.releaseArray = [];
+		app._buildPage();
+	},
+// Build Page
+	_buildPage: function() {
+		app.releaseArray = [];	
+		Ext.create('Rally.data.wsapi.Store', {
+			model : 'Release',
+			fetch : ['Name', 'ObjectID'],
+			limit : Infinity,
+			autoLoad : true,
+			listeners : {
+				load : function(myStore, myData, mySuccess) {
+					Ext.Array.each(myData, function(rel) {
+						app.releaseArray.push(rel.data);
+					});
+				app._addNewButton();
+				app._addBoard();
+				app._addReleaseButton();
+				},
+				scope : this
+			}
+		});
+	},
+	
+// Add AddNew Button to container
+	_addNewButton: function() {
+		if (app.addButton) app.addButton.destroy();
+		addNewConfig = {
+			xtype: 'rallyaddnew',
+			newButtonText: '+ New Feature/Story',
+			recordTypes: ['PortfolioItem/Feature', 'User Story'],
+//			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
+			listeners: {
+				create: function(addNew, record) {
+//					Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
+// app.board.refresh();
+console.log("Created F/S");
+app._buildPage();
+				}
+			},
+			showAddWithDetails: true
+		};
+		app.addButton = this.add(addNewConfig);
+    },
+// add board to container
+    _addBoard: function() {
+		if (app.board) app.board.destroy();
+		boardConfig = {
+			xtype: 'rallycardboard',
+			types: ['User Story'],
+			attribute: 'Feature',
+			context: this.getContext(),
+			enableRanking: true,
+			cardConfig: {
+				editable: true,
+				showIconsAndHighlightBorder: true,
+				showReadyIcon: true,
+				showBlockedIcon: true,
+				showColorIcon: true,
+				showPlusIcon: true,
+				showGearIcon: true
+			},
+			columnConfig: {
+				listeners: {
+					scope: this,
+					beforecarddroppedsave: function(column,card){
+						var rec = card.getRecord();
+						rec.set('PortfolioItem', column.getValue());
+					}
+				}
+			},
+			rowConfig: {
+				field: 'Release',
+				enableCrossRowDragging: true,
+				sortDirection: 'ASC',
+				values: app.releaseArray
+			}
+		};
+		app.board = this.add(boardConfig);
+    },
+    // Add AddNew Button to container
+	_addReleaseButton: function() {
+		if (app.releaseButton) app.releaseButton.destroy();
+		addNewReleaseConfig = {
+			xtype: 'rallyaddnew',
+			newButtonText: '+ New Release',
+//			fieldLabel: 'Add Release',
+			recordTypes: ['Release'],
+//			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
+			listeners: {
+				create: function(addNew, record) {
+//				Ext.Msg.alert('Add New', 'Added record named ' + record.get('Name'));
+// app.board.refresh();
+app._buildPage();
+				}
+			},
+			showAddWithDetails: true
+		};
+		app.releaseButton = app.add(addNewReleaseConfig);
+    }
+});
+
+
+
+            Rally.launchApp('StoryMap', {
+                name:"StoryMap",
+	            parentRepos:""
+            });
+
+        });
+    </script>
+
+
+    <style type="text/css">
+        .app {
+  /* Add app styles here */
+}
+
+    </style>
+</head>
+<body>
+</body>
+</html>
