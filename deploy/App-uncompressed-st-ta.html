@@ -7,7 +7,8 @@
 
     <script type="text/javascript">
         Rally.onReady(function () {
-                Ext.define('StoryMap', {
+                var app;
+Ext.define('StoryMap', {
 	extend: 'Rally.app.App',
 	componentCls: 'app',
 	launch: function() {
@@ -17,19 +18,11 @@
 	},
 // Build Page
 	_buildPage: function() {
-		app.releaseArray = [null];
-		var today = Rally.util.DateTime.toIsoString(new Date());	
+		app.releaseArray = [null];	
 		Ext.create('Rally.data.wsapi.Store', {
-			model : 'Release',
+			model : 'Iteration',
 			fetch : ['Name', 'ObjectID'],
 			limit : Infinity,
-			filters: [
-				{
-					property: 'ReleaseDate',
-					operator: '>',
-					value: today
-				}
-			],
 			autoLoad : true,
 			listeners : {
 				load : function(myStore, myData, mySuccess) {
@@ -49,10 +42,9 @@
 	_addNewButton: function() {
 		if (app.addButton) app.addButton.destroy();
 		addNewConfig = {
-			html:'<div><input type="button" style="text-align:right;float:right;" value="Update" onClick="window.location.reload()"/></div>',
 			xtype: 'rallyaddnew',
-			newButtonText: '+ New Feature/Story',
-			recordTypes: ['User Story', 'PortfolioItem/Feature'],
+			newButtonText: '+ New Story/Task',
+			recordTypes: ['User Story', 'Task'],
 			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project', 'Tasks', 'Dependencies'],
 			listeners: {
 				create: function(addNew, record) {
@@ -73,32 +65,32 @@
 //		if (app.board) app.board.destroy();
 		boardConfig = {
 			xtype: 'rallycardboard',
-			types: ['User Story'],
-			attribute: 'Feature',
+			types: ['Task'],
+			attribute: 'WorkProduct',
 			itemId: 'myBoard',
 			context: this.getContext(),
 			enableRanking: true,
 			cardConfig: {
-				fields: ['Name', 'PlanEstimate', 'ScheduleState'],
-				editable: true,
-				showIconsAndHighlightBorder: true,
-				showReadyIcon: true,
-				showBlockedIcon: true,
-				showColorIcon: true,
-				showPlusIcon: true,
-				showGearIcon: true
+				fields: ['Name', 'Description', 'ToDo'],
+				editable: true //,
+//				showIconsAndHighlightBorder: true,
+//				showReadyIcon: true,
+//				showBlockedIcon: true,
+//				showColorIcon: true,
+//				showPlusIcon: true,
+//				showGearIcon: true
 			},
 			columnConfig: {
 				listeners: {
 					scope: this,
 					beforecarddroppedsave: function(column,card){
 						var rec = card.getRecord();
-						rec.set('PortfolioItem', column.getValue());
+						rec.set('WorkProduct', column.getValue());
 					}
 				}
 			},
 			rowConfig: {
-				field: 'Release',
+				field: 'Iteration',
 				enableCrossRowDragging: true,
 				sortDirection: 'ASC',
 				values: app.releaseArray
@@ -110,10 +102,9 @@
 	_addReleaseButton: function() {
 		if (app.releaseButton) app.releaseButton.destroy();
 		addNewReleaseConfig = {
-			html:'<div><input type="button" style="text-align:right;float:right;" value="Update" onClick="window.location.reload()"/></div>',
 			xtype: 'rallyaddnew',
-			newButtonText: '+ New Release',
-			recordTypes: ['Release'],
+			newButtonText: '+ New Iteration',
+			recordTypes: ['Iteration'],
 //			ignoredRequiredFields: ['Name', 'ScheduleState', 'Project'],
 			listeners: {
 				create: function(addNew, record) {

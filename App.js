@@ -1,18 +1,26 @@
-var app;
 Ext.define('StoryMap', {
 	extend: 'Rally.app.App',
 	componentCls: 'app',
 	launch: function() {
 		app = this;
-		app.releaseArray = [];
+		app.releaseArray = [null];
 		app._buildPage();
 	},
 // Build Page
-	_buildPage: function() {	
+	_buildPage: function() {
+		app.releaseArray = [null];
+		var today = Rally.util.DateTime.toIsoString(new Date());	
 		Ext.create('Rally.data.wsapi.Store', {
 			model : 'Release',
 			fetch : ['Name', 'ObjectID'],
 			limit : Infinity,
+			filters: [
+				{
+					property: 'ReleaseDate',
+					operator: '>',
+					value: today
+				}
+			],
 			autoLoad : true,
 			listeners : {
 				load : function(myStore, myData, mySuccess) {
@@ -32,6 +40,7 @@ Ext.define('StoryMap', {
 	_addNewButton: function() {
 		if (app.addButton) app.addButton.destroy();
 		addNewConfig = {
+			html:'<div><input type="button" style="text-align:right;float:right;" value="Update" onClick="window.location.reload()"/></div>',
 			xtype: 'rallyaddnew',
 			newButtonText: '+ New Feature/Story',
 			recordTypes: ['User Story', 'PortfolioItem/Feature'],
@@ -49,11 +58,15 @@ Ext.define('StoryMap', {
     },
 // add board to container
     _addBoard: function() {
-		if (app.board) app.board.destroy();
+		if (this.down('#myBoard')) {
+			this.remove('myBoard');
+		}
+//		if (app.board) app.board.destroy();
 		boardConfig = {
 			xtype: 'rallycardboard',
 			types: ['User Story'],
 			attribute: 'Feature',
+			itemId: 'myBoard',
 			context: this.getContext(),
 			enableRanking: true,
 			cardConfig: {
@@ -88,6 +101,7 @@ Ext.define('StoryMap', {
 	_addReleaseButton: function() {
 		if (app.releaseButton) app.releaseButton.destroy();
 		addNewReleaseConfig = {
+			html:'<div><input type="button" style="text-align:right;float:right;" value="Update" onClick="window.location.reload()"/></div>',
 			xtype: 'rallyaddnew',
 			newButtonText: '+ New Release',
 			recordTypes: ['Release'],
