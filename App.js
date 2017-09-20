@@ -1,3 +1,13 @@
+// override Release lable to include project name - release name
+Ext.define('Rally.ui.cardboard.row.HeaderFix', {
+    override: 'Rally.ui.cardboard.row.Header',
+	_getTitle: function() {
+		var value = this.getValue();
+		if (value != null) { return value.Project.Name+" - "+value.Name;
+		} else return "unscheduled";
+	}
+});
+
 Ext.define('StoryMap', {
 	extend: 'Rally.app.App',
 	componentCls: 'app',
@@ -12,7 +22,7 @@ Ext.define('StoryMap', {
 		var today = Rally.util.DateTime.toIsoString(new Date());	
 		Ext.create('Rally.data.wsapi.Store', {
 			model : 'Release',
-			fetch : ['Name', 'ObjectID'],
+			fetch : ['Name', 'ObjectID', 'Project'],
 			limit : Infinity,
 			filters: [
 				{
@@ -26,6 +36,7 @@ Ext.define('StoryMap', {
 				load : function(myStore, myData, mySuccess) {
 					Ext.Array.each(myData, function(rel) {
 						app.releaseArray.push(rel.data);
+// console.log(rel.data);
 					});
 				app._addNewButton();
 				app._addBoard();
@@ -61,6 +72,7 @@ Ext.define('StoryMap', {
 		if (this.down('#myBoard')) {
 			this.remove('myBoard');
 		}
+
 //		if (app.board) app.board.destroy();
 		boardConfig = {
 			xtype: 'rallycardboard',
