@@ -1,13 +1,24 @@
+// code to compress rows (rows of child projects with same release name)
+// UNCOMMENT THIS But comment out the next override, they do not work together
+//	Ext.define('Rally.ui.cardboard.row.RowFix', {
+//		override: 'Rally.ui.cardboard.row.Row',
+//	
+//		isMatchingRecord: function(record) {
+//			return this.callParent(arguments) ||
+//				this.getValue().Name === (record.get('Release') && record.get('Release').Name);
+//		}
+//	});
+//
 // override Release lable to include project name - release name
 Ext.define('Rally.ui.cardboard.row.HeaderFix', {
     override: 'Rally.ui.cardboard.row.Header',
 	_getTitle: function() {
 		var value = this.getValue();
 		if (value != null) { return value.Project.Name+" - "+value.Name;
-		} else return "unscheduled";
+		} else return "No Release";
 	}
 });
-
+//
 Ext.define('StoryMap', {
 	extend: 'Rally.app.App',
 	componentCls: 'app',
