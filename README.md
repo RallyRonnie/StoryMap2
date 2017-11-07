@@ -10,7 +10,7 @@ Story Maps by Jeff Patton for more information.
 
 ## Screen Shot
 
-![Story Map](https://raw.github.com/RallyRonnie/StoryMap2/master/screenshot.png)
+![Story Map](https://github.com/RallyRonnie/StoryMap2/blob/master/screenshot.png)
 
 ## How to Use
 
