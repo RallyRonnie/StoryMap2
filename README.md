@@ -14,9 +14,22 @@ Story Maps by Jeff Patton for more information.
 
 ## How to Use
 
-It is recommended that you setup a separate Rally Project for each Story Map. You can then create
-Features and stories from the APP as well as create Releases as you start sequencing the stories. Once complete,
-you can then move/assign each feature and story to the appropriate team (Project).
+You can use the APP at your team level, program level or setup a separate Project for each Story Map. 
+You can then create your Feature set in the Portfolio->Portfolio Items page and also create your appropriate 
+Releases or Iterations in the Plan->Time Boxes page. New stories can then be created on the board and placed into
+the appropriate row and column mapping the story. Selecting a story ID will pop the quick details page  (QDP)to the right
+to further complete the story details.
+
+NOTE: If a row is not displayed, that indicates that there is not a User Story assigned to that Iteration or Release.
+You can select a User Story, and on the QDP, select the desired Iteration or Release and it will now display on the 
+board.
+
+There are new APP options under the APP gear->Edit App Settings. Here is a screenshot. You can easily filter
+the Features (or lowest level PI) using the State picker. You can also change the base Portfolio Item name if your
+default configuration does not use "Feature" as the lowest level PI. You can also choose the row type (either Iteration
+or Release). The query field applies to filtering user story cards if needed.
+
+![Story Map](https://raw.github.com/RallyRonnie/StoryMap2/master/settings.png)
 
 ### Running the App
 
@@ -28,11 +41,6 @@ to create a dashboard page for Custom HTML apps.
 Or you can just click [here](https://raw.github.com/RallyRonnie/StoryMap2/master/deploy/App.html) to find 
 the file and copy it into the custom HTML app.
 
-### Using the App
-You can select the "+ Add Feature/Story", then select Feature to add a theme (Column) for your project. You
-can then add Stories in the same manor and drag-n-drop to the appropriate Feature and Release. You might need
-to refresh the page when adding Releases to see them on the board.
- 
 ## License
 
 AppTemplate is released under the MIT license.  See the file [LICENSE](./LICENSE) for the full text.
