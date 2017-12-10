@@ -23,6 +23,9 @@ Ext.define('Rally.ui.cardboard.row.HeaderFix', {
 Ext.define('StoryMap', {
 	extend: 'Rally.app.App',
 	componentCls: 'app',
+	requires: [
+        'Rally.ui.cardboard.plugin.FixedHeader'
+    ],
 	launch: function () {
 		app = this;
 		var filterState = app.getSetting('PIStateFilter');
@@ -40,7 +43,7 @@ Ext.define('StoryMap', {
 			limit: Infinity,
 			filters: PIFilter,
 			sorters: [{
-				property: 'FormattedID',
+				property: 'Rank',
 				direction: 'ASC'
 			}],
 			autoLoad: true,
@@ -57,7 +60,7 @@ Ext.define('StoryMap', {
 					}];
 					_.each(myData, function (record) {
 						columns.push({
-							tpl: Ext.create("Rally.ui.renderer.template.FormattedIDTemplate"),
+//							tpl: Ext.create("Rally.ui.renderer.template.FormattedIDTemplate"),
 							record: record,
 							value: record.getRef().getRelativeUri(),
 							columnHeaderConfig: {
@@ -120,6 +123,7 @@ Ext.define('StoryMap', {
 				showPlusIcon: true,
 				showGearIcon: true
 			},
+			plugins: [{ptype:'rallyfixedheadercardboard'}],
 			columnConfig: {
 				columnHeaderConfig: {
 					headerTpl: '{PIhdr}'
