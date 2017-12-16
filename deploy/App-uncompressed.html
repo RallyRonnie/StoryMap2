@@ -37,6 +37,28 @@ Ext.define('StoryMap', {
     ],
 	launch: function () {
 		app = this;
+		Ext.create('Rally.data.WsapiDataStore', {
+			autoLoad: true,
+			remoteFilter: false,
+			model: 'TypeDefinition',
+			sorters: [{	property: 'Ordinal',direction: 'Desc'}],
+			filters: [{	property: 'Parent.Name', operator: '=',	value: 'Portfolio Item'}, 
+				{property: 'Creatable',	operator: '=',value: 'true'	}],
+			listeners: {
+				load: function (store, recs) {
+					piTypes = {};				
+					Ext.Array.each(recs, function (type) {
+						// console.log('Found PI Type', type, type.get('Ordinal'), type.get('TypePath'));
+						piTypes[type.get('Ordinal') + ''] = type.get('TypePath');
+					});
+					app.PIType = piTypes['0'];
+					this._buildHeader(piTypes['0']);
+				},
+				scope: this
+			}
+		});
+	},
+	_buildHeader: function (piType) {
 		var filterState = app.getSetting('PIStateFilter');
 		//		console.log('in _onPIsLoaded');
 		var PIFilter = Ext.create('Ext.util.Filter', {});
@@ -47,8 +69,8 @@ Ext.define('StoryMap', {
 			});
 		}
 		Ext.create('Rally.data.wsapi.Store', {
-			model: 'PortfolioItem/' + app.getSetting('PITypeField'),
-			fetch: ['Name', 'ObjectID', 'Project', 'FormattedID'],
+			model: piType,
+			fetch: ['Name', 'ObjectID', 'Project', 'FormattedID','DisplayColor'],
 			limit: Infinity,
 			filters: PIFilter,
 			sorters: [{
@@ -63,30 +85,42 @@ Ext.define('StoryMap', {
 						value: null,
 						columnHeaderConfig: {
 							headerData: {
-								PIhdr: 'No Parent'
+								PIhdr: '<p style="color: Red; font-size: 18px"; font-weight: bolder>No Parent</>'
 							}
 						}
 					}];
 					_.each(myData, function (record) {
+						var fpiColor = record.get('DisplayColor');
+						var hdrStr = 
+							'<p style="color: ' + fpiColor + '; font-size: 18px; font-weight: bolder"><a href="https://rally1.rallydev.com/#/detail' +
+							record.get('_ref') + '" target = "_top">' +
+							record.get('FormattedID') +
+							'</a> - ' +
+							record.get('_refObjectName');
+
 						columns.push({
 //							tpl: Ext.create("Rally.ui.renderer.template.FormattedIDTemplate"),
 							record: record,
 							value: record.getRef().getRelativeUri(),
 							columnHeaderConfig: {
 								headerData: {
-									PIhdr: record.get('FormattedID') + ' - ' + record.get('_refObjectName')
+									PIhdr: hdrStr
 								}
 							}
 						});
 					});
 					app._addNewButton();
-					app._addBoard(columns);
+					app._addBoard(columns, piType);
 //					app._addRowButton();
 				},
 				scope: this
 			}
 		});
 	},
+
+
+
+
 	// Add AddNew Button to container
 	_addNewButton: function () {
 		if (app.addButton) app.addButton.destroy();
@@ -108,7 +142,7 @@ Ext.define('StoryMap', {
 		app.addButton = this.add(addNewConfig);
 	},
 	// add board to container
-	_addBoard: function (columns) {
+	_addBoard: function (columns, piType) {
 		if (this.down('#myBoard')) {
 			this.remove('myBoard');
 		}
@@ -118,7 +152,7 @@ Ext.define('StoryMap', {
 			storeConfig: {
 				filters: app.getQueryFilter()
 			},
-			attribute: app.getSetting('PITypeField'),
+			attribute: piType.split('/')[1],
 			itemId: 'myBoard',
 			context: this.getContext(),
 			enableRanking: true,
@@ -152,7 +186,7 @@ Ext.define('StoryMap', {
 				sortDirection: 'ASC' // ASC | DESC
 			}
 		};
-		console.log(boardConfig);
+//		console.log(boardConfig);
 		app.board = this.add(boardConfig);
 	},
 	// Add AddNew Button to container
@@ -185,7 +219,7 @@ Ext.define('StoryMap', {
 			{
 				name: 'PIStateFilterPicker',
 				xtype: 'rallyfieldvaluecombobox',
-				model: 'PortfolioItem/' + app.getSetting('PITypeField'),
+				model: app.PIType,
 				field: 'State',
 				boxLabelAlign: 'after',
 				fieldLabel: 'State',
@@ -221,19 +255,6 @@ Ext.define('StoryMap', {
 						this.setValue(state);
 					},
 				}
-			},
-			{
-				xtype: 'label',
-				forId: 'myFieldId2',
-				text: 'PI Type',
-				margin: '0 0 0 10'
-			},
-			{
-				name: 'PITypeField',
-				xtype: 'rallytextfield',
-				margin: '0 0 15 50',
-				label: "Portfolio Item Column Type (MUST be lowest level PI that can parent stories)",
-				labelWidth: 200
 			},
 			{
 				xtype: 'label',
@@ -291,6 +312,9 @@ Ext.define('StoryMap', {
     <style type="text/css">
         .app {
   /* Add app styles here */
+}
+.app p {
+  margin: 0;
 }
 
     </style>
