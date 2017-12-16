@@ -41,7 +41,7 @@ to create a dashboard page for Custom HTML apps.
 Or you can just click [here](https://raw.github.com/RallyRonnie/StoryMap2/master/deploy/App.html) to find 
 the file and copy it into the custom HTML app.
 
-## License
+##License
 
 AppTemplate is released under the MIT license.  See the file [LICENSE](./LICENSE) for the full text.
 
